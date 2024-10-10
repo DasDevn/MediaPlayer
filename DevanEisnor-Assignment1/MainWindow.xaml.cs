@@ -24,6 +24,7 @@ namespace DevanEisnor_Assignment1
             InitializeComponent();
         }
 
+        //Opens File
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
             //Example of instantiating an OpenFileDialog
@@ -47,7 +48,7 @@ namespace DevanEisnor_Assignment1
                 myMediaPlayer.Play();
             }
         }
-
+        //Open Tags
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             //Examples of reading tag data from currently selected file.
@@ -57,19 +58,28 @@ namespace DevanEisnor_Assignment1
 
             tagNameBox.Text = title + " : " + year + album.ToString();
         }
+        //Play MP3
         private void Play_Click(object sender, RoutedEventArgs e)
         {
             myMediaPlayer.Play();
         }
 
+        //Pause MP3
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
             myMediaPlayer.Pause();
         }
 
+        //Stop MP3
         private void Stop_Click(object sender, RoutedEventArgs e)
         {
             myMediaPlayer.Stop();
+        }
+
+        //quit application
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

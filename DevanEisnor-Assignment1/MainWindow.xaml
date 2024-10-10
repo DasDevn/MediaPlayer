@@ -12,16 +12,16 @@
                 <MenuItem Header="Open MP3" Click="OpenFile_Click"/>
                 <MenuItem Header="Display MP3 Info" Click="Button_Click"/>
                 <Separator/>
-                <MenuItem Header="Exit"/>
+                <MenuItem Header="Exit" Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Undo"/>
                 <MenuItem Header="Redo"/>
             </MenuItem>
             <MenuItem Header="Media">
-                <MenuItem Header="Play"/>
-                <MenuItem Header="Pause"/>
-                <MenuItem Header="Stop"/>
+                <MenuItem Header="Play" Click="Play_Click"/>
+                <MenuItem Header="Pause" Click="Pause_Click"/>
+                <MenuItem Header="Stop" Click="Stop_Click"/>
             </MenuItem>
         </Menu>
         <TextBlock x:Name="fileNameBox" FontSize="32"></TextBlock>
