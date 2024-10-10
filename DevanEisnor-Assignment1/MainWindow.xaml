@@ -28,5 +28,16 @@
         <MediaElement x:Name="myMediaPlayer" Height="100"
             LoadedBehavior="Manual" UnloadedBehavior="Manual" />
         <TextBlock x:Name="tagNameBox" FontSize="32"></TextBlock>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button x:Name="PlayButton" Click="Play_Click" Width="50" Height="50" Margin="5">
+                <Image Source="Images/media-play.png" Stretch="Uniform"/>
+            </Button>
+            <Button x:Name="PauseButton" Click="Pause_Click" Width="50" Height="50" Margin="5">
+                <Image Source="Images/pause-icon.png" Stretch="Uniform"/>
+            </Button>
+            <Button x:Name="StopButton" Click="Stop_Click" Width="50" Height="50" Margin="5">
+                <Image Source="Images/stop-icon.png" Stretch="Uniform"/>
+            </Button>
+        </StackPanel>
     </StackPanel>
 </Window>

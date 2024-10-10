@@ -57,5 +57,19 @@ namespace DevanEisnor_Assignment1
 
             tagNameBox.Text = title + " : " + year + album.ToString();
         }
+        private void Play_Click(object sender, RoutedEventArgs e)
+        {
+            myMediaPlayer.Play();
+        }
+
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+            myMediaPlayer.Pause();
+        }
+
+        private void Stop_Click(object sender, RoutedEventArgs e)
+        {
+            myMediaPlayer.Stop();
+        }
     }
 }
