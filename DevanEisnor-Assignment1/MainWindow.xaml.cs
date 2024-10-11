@@ -36,7 +36,7 @@ namespace DevanEisnor_Assignment1
         //Opens File
         //Added try catch
         //Code from Assignment 1 helper file
-        private void Open_Executed(object sender, RoutedEventArgs e)
+        private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fileDlg = new OpenFileDialog();
             fileDlg.Filter = "MP3 files(*.mp3)|*.mp3|All files(*.*)|*.*";
@@ -92,25 +92,31 @@ namespace DevanEisnor_Assignment1
         {
             try
             {
-                if (currentFile?.Tag.Pictures.Length > 0)
+                if (currentFile.Tag.Pictures.Length > 0)
                 {
+                    
                     var bin = currentFile.Tag.Pictures[0].Data.Data;
 
                     using (var stream = new MemoryStream(bin))
                     {
+                        //Create class, get image, converts, and is for display 
                         var image = new BitmapImage();
                         image.BeginInit();
                         image.StreamSource = stream;
                         image.CacheOption = BitmapCacheOption.OnLoad;
                         image.EndInit();
 
+                        // Set source to the Image to the album art
                         Mp3Image.Source = image;
                     }
                 }
+
             }
             catch (Exception ex)
             {
+                // Log the error or show a message if necessary
                 MessageBox.Show($"Failed to load album art: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+               
             }
         }
 
@@ -141,11 +147,12 @@ namespace DevanEisnor_Assignment1
                 tagNameBox.Inlines.Clear();
 
                 //https://stackoverflow.com/questions/24130980/how-can-i-insert-a-newline-into-a-textblock-without-xaml
-                //allows for each line to have different font
                 tagNameBox.Inlines.Add(new Run(title) { FontSize = 16, FontWeight = FontWeights.Bold });
                 tagNameBox.Inlines.Add(new LineBreak());
                 tagNameBox.Inlines.Add(new Run(artist) { FontSize = 12, FontStyle = FontStyles.Italic });
                 tagNameBox.Inlines.Add(new LineBreak());
+
+                // Add album and year with smaller font
                 tagNameBox.Inlines.Add(new Run($"{album} ({year})") { FontSize = 10 });
 
                 // Make the TextBlock visible
@@ -228,52 +235,31 @@ namespace DevanEisnor_Assignment1
 
 
         //Play MP3
-        private void Play_Executed(object sender, RoutedEventArgs e)
+        private void Play_Click(object sender, RoutedEventArgs e)
         {
-            if (myMediaPlayer != null)
-            {
-                myMediaPlayer.Play();
-                timer.Start();
-            }
+            myMediaPlayer.Play();
+            timer.Start();
         }
 
         //Pause MP3
-        private void Pause_Executed(object sender, RoutedEventArgs e)
+        private void Pause_Click(object sender, RoutedEventArgs e)
         {
-            if (myMediaPlayer != null)
-            {
-                myMediaPlayer.Pause();
-                timer.Stop();
-            }
+            myMediaPlayer.Pause();
+            timer.Stop();
         }
 
         //Stop MP3
-        private void Stop_Executed(object sender, RoutedEventArgs e)
+        private void Stop_Click(object sender, RoutedEventArgs e)
         {
-            if (myMediaPlayer != null)
-            {
-                myMediaPlayer.Stop();
-                timer.Stop();
-                slider1.Value = 0;
-            }
+            myMediaPlayer.Stop();
+            timer.Stop(); // Stop the timer
+            slider1.Value = 0;
         }
 
         //quit application
-        private void Close_Executed(object sender, RoutedEventArgs e)
+        private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
-
-        private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void Media_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            // Enable the command if the media player is not null and a media file is loaded
-            e.CanExecute = myMediaPlayer != null && myMediaPlayer.Source != null;
-        }
-
     }
 }
