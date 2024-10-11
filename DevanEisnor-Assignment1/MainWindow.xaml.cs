@@ -1,15 +1,9 @@
 ﻿using Microsoft.Win32;
 using System.IO;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace DevanEisnor_Assignment1
@@ -21,7 +15,7 @@ namespace DevanEisnor_Assignment1
     {
         //CITE https://wpf-tutorial.com/misc/dispatchertimer/
         private DispatcherTimer timer;
-        TagLib.File currentFile;
+        TagLib.File? currentFile;
 
         public MainWindow()
         {
@@ -29,8 +23,13 @@ namespace DevanEisnor_Assignment1
 
             // Set up the DispatcherTimer
             timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1); // Update every second
+            timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += Timer_Tick;
+
+            //events for media
+            MediaControls.PlayClicked += Play_Executed;
+            MediaControls.PauseClicked += Pause_Executed;
+            MediaControls.StopClicked += Stop_Executed;
         }
 
         //Opens File
@@ -54,7 +53,7 @@ namespace DevanEisnor_Assignment1
                     {
                         if (myMediaPlayer.NaturalDuration.HasTimeSpan)
                         {
-                            slider1.Maximum = myMediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
+                            MediaControls.SliderMaximum = myMediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
                         }
                         timer.Start();
                     };
@@ -68,7 +67,7 @@ namespace DevanEisnor_Assignment1
 
         //CITE https://wpf-tutorial.com/misc/dispatchertimer/
         //Get song length, and update slider
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object? sender, EventArgs e)
         {
             if (myMediaPlayer.NaturalDuration.HasTimeSpan)
             {
@@ -76,11 +75,10 @@ namespace DevanEisnor_Assignment1
                 var currentPosition = myMediaPlayer.Position;
                 var totalDuration = myMediaPlayer.NaturalDuration.TimeSpan;
 
-                // Update the slider position
-                slider1.Value = currentPosition.TotalSeconds;
-
-                // Update the time display in "m:ss / m:ss" format
-                timeDisplay.Text = $"{currentPosition.ToString(@"m\:ss")} / {totalDuration.ToString(@"m\:ss")}";
+                // Update MediaControls' slider and time display
+                MediaControls.SliderValue = currentPosition.TotalSeconds;
+                MediaControls.SliderMaximum = totalDuration.TotalSeconds;
+                MediaControls.TimeText = $"{currentPosition.ToString(@"m\:ss")} / {totalDuration.ToString(@"m\:ss")}";
             }
         }
 
@@ -89,7 +87,7 @@ namespace DevanEisnor_Assignment1
         {
             try
             {
-                if (currentFile.Tag.Pictures.Length > 0)
+                if (currentFile?.Tag.Pictures.Length > 0)
                 {
                     
                     var bin = currentFile.Tag.Pictures[0].Data.Data;
@@ -228,46 +226,50 @@ namespace DevanEisnor_Assignment1
             }
         }
 
-
-
-
         private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
         // Play Command Execution
-        private void Play_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void Play_Executed(object? sender, EventArgs e)
         {
-            myMediaPlayer.Play();
-            timer.Start();
+            if (myMediaPlayer != null)
+            {
+                myMediaPlayer.Play();
+                timer.Start();
+            }
         }
 
         // Pause Command Execution
-        private void Pause_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void Pause_Executed(object? sender, EventArgs e)
         {
-            myMediaPlayer.Pause();
-            timer.Stop();
+            if (myMediaPlayer != null)
+            {
+                myMediaPlayer.Pause();
+                timer.Stop();
+            }
         }
 
         // Stop Command Execution
-        private void Stop_Executed(object sender, ExecutedRoutedEventArgs e)
+        private void Stop_Executed(object? sender, EventArgs e)
         {
-            myMediaPlayer.Stop();
-            timer.Stop();
-            slider1.Value = 0;
-        }
-
-        // Always executable commands
-        private void CanExecute_Always(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
+            if (myMediaPlayer != null)
+            {
+                myMediaPlayer.Stop();
+                timer.Stop();
+                MediaControls.SliderValue = 0;
+            }
         }
 
         // Enable command if media player is not null and a file is loaded
         private void Media_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = myMediaPlayer != null && myMediaPlayer.Source != null;
+        }
+        private void CanExecute_Always(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
         }
 
     }
