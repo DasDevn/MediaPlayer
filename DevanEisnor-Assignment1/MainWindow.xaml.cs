@@ -36,7 +36,7 @@ namespace DevanEisnor_Assignment1
         //Opens File
         //Added try catch
         //Code from Assignment 1 helper file
-        private void OpenFile_Click(object sender, RoutedEventArgs e)
+        private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog fileDlg = new OpenFileDialog();
             fileDlg.Filter = "MP3 files(*.mp3)|*.mp3|All files(*.*)|*.*";
@@ -45,30 +45,27 @@ namespace DevanEisnor_Assignment1
             {
                 try
                 {
-                    // Attempt to open the file and initialize the media player
                     currentFile = TagLib.File.Create(fileDlg.FileName);
                     myMediaPlayer.Source = new Uri(fileDlg.FileName);
                     myMediaPlayer.Play();
                     LoadAlbumArt();
 
-                    // Set up slider maximum value based on media duration
                     myMediaPlayer.MediaOpened += (s, ev) =>
                     {
                         if (myMediaPlayer.NaturalDuration.HasTimeSpan)
                         {
                             slider1.Maximum = myMediaPlayer.NaturalDuration.TimeSpan.TotalSeconds;
                         }
-                        // Start the timer
-                        timer.Start(); 
+                        timer.Start();
                     };
                 }
                 catch (Exception ex)
                 {
-                    // Log the error or show a message to the user
                     MessageBox.Show($"Failed to open the file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
+
         //CITE https://wpf-tutorial.com/misc/dispatchertimer/
         //Get song length, and update slider
         private void Timer_Tick(object sender, EventArgs e)
@@ -234,32 +231,44 @@ namespace DevanEisnor_Assignment1
 
 
 
-        //Play MP3
-        private void Play_Click(object sender, RoutedEventArgs e)
+        private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        // Play Command Execution
+        private void Play_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             myMediaPlayer.Play();
             timer.Start();
         }
 
-        //Pause MP3
-        private void Pause_Click(object sender, RoutedEventArgs e)
+        // Pause Command Execution
+        private void Pause_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             myMediaPlayer.Pause();
             timer.Stop();
         }
 
-        //Stop MP3
-        private void Stop_Click(object sender, RoutedEventArgs e)
+        // Stop Command Execution
+        private void Stop_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             myMediaPlayer.Stop();
-            timer.Stop(); // Stop the timer
+            timer.Stop();
             slider1.Value = 0;
         }
 
-        //quit application
-        private void Exit_Click(object sender, RoutedEventArgs e)
+        // Always executable commands
+        private void CanExecute_Always(object sender, CanExecuteRoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            e.CanExecute = true;
         }
+
+        // Enable command if media player is not null and a file is loaded
+        private void Media_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = myMediaPlayer != null && myMediaPlayer.Source != null;
+        }
+
     }
 }
